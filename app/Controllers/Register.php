@@ -32,12 +32,12 @@ class Register extends BaseController
         // Validation Rules yang Kompleks
         $rules = [
             'username' => [
-                'rules' => 'required|min_length[5]|max_length[20]|alpha_numeric|is_unique[users.username]',
+                'rules' => 'required|min_length[5]|max_length[20]|regex_match[/^[a-zA-Z0-9._-]+$/]|is_unique[users.username]',
                 'errors' => [
                     'required' => 'Username wajib diisi',
                     'min_length' => 'Username minimal 5 karakter',
                     'max_length' => 'Username maksimal 20 karakter',
-                    'alpha_numeric' => 'Username hanya boleh huruf dan angka',
+                    'regex_match' => 'Username hanya boleh huruf, angka, underscore (_), dash (-), dan titik (.)',
                     'is_unique' => 'Username sudah digunakan'
                 ]
             ],

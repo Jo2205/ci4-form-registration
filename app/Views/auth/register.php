@@ -151,7 +151,7 @@
                                 <i class="fas fa-exclamation-circle mr-1"></i><?= session('errors')['username'] ?>
                             </p>
                         <?php else: ?>
-                            <p class="text-gray-500 text-xs mt-1">5-20 characters, alphanumeric only</p>
+                            <p class="text-gray-500 text-xs mt-1">5-20 characters: letters, numbers, _ - .</p>
                         <?php endif; ?>
                     </div>
 
@@ -247,33 +247,6 @@
                             <p class="text-red-400 text-xs mt-2">
                                 <i class="fas fa-exclamation-circle mr-1"></i><?= session('errors')['phone'] ?>
                             </p>
-                        <?php else: ?>
-                            <p class="text-gray-500 text-xs mt-1">Indonesian format: 08xxxxxxxxxx</p>
-                        <?php endif; ?>
-                    </div>
-
-                    <!-- Birth Date (Bisa diketik manual) -->
-                    <div class="cyber-border">
-                        <label class="block text-green-400 text-sm font-semibold mb-2 tracking-wide">
-                            <i class="fas fa-calendar text-green-500"></i> BIRTH DATE <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" name="birth_date" value="<?= old('birth_date') ?>"
-                            placeholder="YYYY-MM-DD (e.g., 2000-01-15)"
-                            class="input-glow w-full bg-gray-900/50 border <?= isset(session('errors')['birth_date']) ? 'border-red-500' : 'border-gray-700' ?> text-white rounded-xl px-4 py-3 focus:outline-none focus:border-green-500 transition-all">
-                        <?php if (isset(session('errors')['birth_date'])): ?>
-                            <p class="text-red-400 text-xs mt-2">
-                                <i class="fas fa-exclamation-circle mr-1"></i><?= session('errors')['birth_date'] ?>
-                            </p>
-                        <?php else: ?>
-                            <p class="text-gray-500 text-xs mt-1">Format: YYYY-MM-DD, Min age: 17 years</p>
-                        <?php endif; ?>
-                    </div>
-
-                    <!-- Gender -->
-                    <div class="cyber-border">
-                        <label class="block text-green-400 text-sm font-semibold mb-2 tracking-wide">
-                            <i class="fas fa-venus-mars text-green-500"></i> GENDER <span class="text-red-500">*</span>
-                        </label>
                         <div class="flex gap-4 mt-3">
                             <label class="flex items-center space-x-3 cursor-pointer group">
                                 <input type="radio" name="gender" value="Laki-laki" <?= old('gender') == 'Laki-laki' ? 'checked' : '' ?>
@@ -423,6 +396,46 @@
             document.getElementById('profile_picture').value = '';
             document.getElementById('imagePreview').innerHTML = '';
         }
+        // Real-time Phone Number Validation
+        document.addEventListener('DOMContentLoaded', function() {
+            const phoneInput = document.querySelector('input[name="phone"]');
+
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function(e) {
+                    const value = e.target.value;
+                    const phoneError = phoneInput.parentElement.querySelector('.phone-error');
+                    const phoneHelper = phoneInput.parentElement.querySelector('.phone-helper');
+
+                    // Check if value contains non-numeric characters
+                    if (value && !/^[0-9]*$/.test(value)) {
+                        // Show error
+                        phoneInput.classList.remove('border-gray-700');
+                        phoneInput.classList.add('border-red-500');
+
+                        if (!phoneError) {
+                            const errorMsg = document.createElement('p');
+                            errorMsg.className = 'phone-error text-red-400 text-xs mt-2';
+                            errorMsg.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i>Nomor telepon harus angka saja';
+                            if (phoneHelper) {
+                                phoneHelper.style.display = 'none';
+                            }
+                            phoneInput.parentElement.appendChild(errorMsg);
+                        }
+                    } else {
+                        // Remove error
+                        phoneInput.classList.remove('border-red-500');
+                        phoneInput.classList.add('border-gray-700');
+
+                        if (phoneError) {
+                            phoneError.remove();
+                        }
+                        if (phoneHelper) {
+                            phoneHelper.style.display = 'block';
+                        }
+                    }
+                });
+            }
+        });
     </script>
 </body>
 
